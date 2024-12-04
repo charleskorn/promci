@@ -24,10 +24,17 @@ runs:
       with:
         path: |
           ~/.cache/go-build
-          ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-go-build-${{ github.workflow }}-${{ github.job }}-${{ toJSON(matrix) }}-${{ hashFiles('**/go.sum') }}
         restore-keys: |
-          ${{ runner.os }}-go-
+          ${{ runner.os }}-go-build-${{ github.workflow }}-${{ github.job }}-${{ toJSON(matrix) }}-
+    - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+      if: inputs.enable_go == 'true'
+      with:
+        path: |
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-dependencies-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-dependencies-
     - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
       if: inputs.enable_npm == 'true'
       with:
